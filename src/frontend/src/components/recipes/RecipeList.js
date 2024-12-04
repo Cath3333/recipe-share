@@ -121,7 +121,12 @@ export const RecipeList = () => {
         let url = 'http://localhost:8000/recipe?';
         
         if (filter.category !== 'all') {
+          if (categories.includes(filter.category)) {
+            
             url += `category=${encodeURIComponent(filter.category)}&`;
+          } else {
+            setFilter({ ...filter, category: 'all' });
+          }
         }
         
         const response = await fetch(url);
@@ -225,13 +230,13 @@ export const RecipeList = () => {
               <FormControl fullWidth>
                 <InputLabel>Category</InputLabel>
                 <Select
-                  value={filter.category}
+                  value={categories.includes(filter.category) ? filter.category : 'all'}
                   label="Category"
                   onChange={(e) => setFilter({ ...filter, category: e.target.value })}
                 >
                   <MenuItem value="all">All Categories</MenuItem>
                   {categories.map((category) => (
-                    <MenuItem key={category} value={category.toLowerCase()}>
+                    <MenuItem key={category} value={category}>
                       {category}
                     </MenuItem>
                   ))}

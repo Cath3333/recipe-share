@@ -16,7 +16,7 @@ async def lifespan(app: FastAPI):
         print("Connecting to MongoDB")
         await client.server_info()
         print("Connected to MongoDB")
-        yield 
+        yield
     except Exception as e:
         print(f"Failed to connect to MongoDB: {e}")
         raise

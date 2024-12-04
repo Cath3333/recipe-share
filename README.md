@@ -4,10 +4,16 @@ RecipeShare is a web app for people to exchange recipes. Each user can create th
 
 ## Pages / Features
 ### Log In 
+Users can log in to the application via email and password.
 ### Dashboard
+he dashboard displays a list of recipes, which can be filtered by category and minimum rating. Users can also choose to save and rate each recipe
 ### Add Recipe
+Users can add new recipes to the platform via a pop-up form.
 ### Cookbook (User Profile)
+users can view and manage their own collection of saved recipes
 ### Log Out
+users can log out of the application (lol). It then redirects the user to the log in page.
+
 
 
 ## Tech Stack
@@ -24,4 +30,4 @@ In the frontend directory, run:
 
 In the backend directory, run:
 
-### `TBD`
+### `uvicorn main:app --reload --port 8000`
