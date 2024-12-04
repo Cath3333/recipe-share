@@ -1,8 +1,21 @@
 import motor.motor_asyncio
 import os
+from dotenv import load_dotenv
 
-MONGO_DETAILS = os.getenv("MONGO_DETAILS", "mongodb://localhost:27017")
+# Load environment variables from .env file
+load_dotenv()
 
+# Retrieve MongoDB connection details from the environment
+MONGO_DETAILS = os.getenv("MONGO_ATLAS_URL")
+print(f"MONGO_DETAILS: {MONGO_DETAILS}")
+
+if not MONGO_DETAILS:
+    raise ValueError("MONGO_ATLAS_URL environment variable not set or empty")
+
+load_dotenv()
+
+
+# Create an async MongoDB client
 client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_DETAILS)
 database = client.recipe_sharing  # Database name
 

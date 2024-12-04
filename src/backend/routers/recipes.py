@@ -1,11 +1,11 @@
 # app/routers/recipes.py
 
-from fastapi import APIRouter, HTTPException, Body, Query, Depends
+from fastapi import APIRouter, HTTPException, Body, Query, Depends, BackgroundTasks
 
 from typing import List, Optional
-from ..models import Recipe, NewRecipe
-from ..database import recipe_collection
-from ..helpers.recipe_helper import (
+from models import Recipe, NewRecipe
+from database import recipe_collection
+from helpers.recipe_helper import (
     add_recipe_to_db,
     get_all_recipes,
     get_recipe_by_id,
@@ -14,7 +14,7 @@ from ..helpers.recipe_helper import (
 )
 
 
-router = APIRouter(prefix="/recipes", tags=["recipes"])
+router = APIRouter(prefix="/recipe", tags=["recipe"])
 
 
 @router.post("/", response_model=dict)
