@@ -5,6 +5,7 @@ RecipeShare is a web app for people to exchange recipes. Each user can create th
 ## Pages / Features
 ### Log In 
 Users can log in to the application via email and password.
+Default username is: cathchow@seas.upenn.edu; Password: 3333
 ![log in image](images/login.png)
 ### Dashboard
 he dashboard displays a list of recipes, which can be filtered by category and minimum rating. Users can also choose to save and rate each recipe
