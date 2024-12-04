@@ -95,7 +95,7 @@ export const RecipeForm = ({ onRecipeAdded }) => {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:8000/recipe', {
+      const response = await fetch('http://localhost:8000/recipe/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Container,
@@ -68,28 +69,48 @@ export const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { login } = React.useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    setError('');
+    
+    
     try {
       const response = await fetch('http://localhost:8000/token', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: `username=${email}&password=${password}`,
+        body: `email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`,
       });
+
       const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.detail || 'Login failed');
+      }
+
       if (data.access_token) {
-        login(data.access_token);
+        login(data.access_token, data.user);
+        navigate('/');
+        
       }
     } catch (error) {
+      setError(error.message);
       console.error('Login failed:', error);
     } finally {
       setIsLoading(false);
     }
   };
+
+  {error && (
+    <Typography color="error" sx={{ mb: 2 }}>
+      {error}
+    </Typography>
+  )}
 
   return (
     <ThemeProvider theme={theme}>

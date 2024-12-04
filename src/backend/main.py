@@ -7,7 +7,8 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from contextlib import asynccontextmanager
 
 from database import client, database
-from routers import users, recipes
+from routers import users, recipes, auth
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -27,11 +28,13 @@ async def lifespan(app: FastAPI):
         client.close()
         print("Disconnected from MongoDB")
 
+
 app = FastAPI(lifespan=lifespan)
 
 # Include routers
 app.include_router(users.router)
 app.include_router(recipes.router)
+app.include_router(auth.router)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],

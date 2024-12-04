@@ -1,6 +1,13 @@
 # app/routers/recipes.py
 
-from fastapi import APIRouter, HTTPException, Body, Query, Depends, BackgroundTasks
+from fastapi import (
+    APIRouter,
+    HTTPException,
+    Body,
+    Query,
+    Depends,
+    BackgroundTasks,
+)
 
 from typing import List, Optional
 from models import Recipe, NewRecipe
@@ -16,10 +23,13 @@ from helpers.recipe_helper import (
 
 router = APIRouter(prefix="/recipe", tags=["recipe"])
 
+# @router.post("/{recipe_id}/save/", )
+
 
 @router.post("/", response_model=dict)
 async def create_recipe(recipe_data: dict = Body(...)):
     try:
+        print(recipe_data)
         new_recipe = await add_recipe_to_db(recipe_collection, recipe_data)
         return new_recipe
     except Exception as e:
@@ -40,8 +50,10 @@ async def get_recipes(
         cursor = recipe_collection.find(query).skip(skip).limit(limit)
         recipes = []
         async for recipe in cursor:
+            print("hi")
             recipe["_id"] = str(recipe["_id"])
             recipes.append(recipe)
+        print(recipes)
         return recipes
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

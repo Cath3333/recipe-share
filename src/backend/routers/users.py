@@ -1,12 +1,27 @@
 # app/routers/users.py
 
 from fastapi import APIRouter, HTTPException, BackgroundTasks
-from typing import List
+from typing import List, Dict
 from models import User, NewUser
 from database import user_collection, recipe_collection
 from bson import ObjectId
 
 router = APIRouter(prefix="/users", tags=["users"])
+
+
+async def can_login(user_data: Dict[str, str]) -> bool:
+    return user_collection.find_one(
+        {"email": user_data.email, "password": user_data.password}
+    )
+
+    # result = await user_collection.find_one(
+    #     {"email": user_data.email, "password": user_data.password}
+    # )
+
+    # new_recipe = await recipe_collection.find_one({"_id": result.inserted_id})
+
+    # new_recipe["_id"] = str(new_recipe["_id"])
+    # return new_recipe
 
 
 @router.post("/", response_model=User)
@@ -29,6 +44,15 @@ async def get_users():
     async for user in user_collection.find():
         users.append(User(**user))
     return users
+
+
+# @router.post("/auth/", response_model=dict)
+# async def authenticate(user_data: dict = Body(...)):
+#     try:
+#         returned_data = await can_login(user_data)
+#         return returned_data
+#     except Exception as e:
+#         raise HTTPException(status_code=400, detail=str(e))
 
 
 @router.get("/{username}", response_model=User)
