@@ -12,18 +12,15 @@ from routers import users, recipes, auth
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup tasks
     try:
-        # Explicitly attempt to connect to MongoDB to ensure connection is valid
         print("Connecting to MongoDB")
-        await client.server_info()  # Asynchronously verifies that MongoDB is reachable
+        await client.server_info()
         print("Connected to MongoDB")
-        yield  # Continue with the application lifecycle
+        yield 
     except Exception as e:
         print(f"Failed to connect to MongoDB: {e}")
         raise
 
-    # Shutdown tasks
     finally:
         client.close()
         print("Disconnected from MongoDB")
@@ -31,7 +28,6 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-# Include routers
 app.include_router(users.router)
 app.include_router(recipes.router)
 app.include_router(auth.router)

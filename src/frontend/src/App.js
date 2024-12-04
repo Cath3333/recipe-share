@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { AuthProvider, AuthContext } from './components/auth/AuthContext';
 import { Nav } from './components/layout/Nav';
 import { RecipeList } from './components/recipes/RecipeList';
+import { Cookbook } from './components/cookbook/Cookbook';
 import { Login } from './components/auth/Login';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
@@ -11,25 +12,12 @@ const App = () => {
   const [currentPage, setCurrentPage] = useState('home');
   const { token } = React.useContext(AuthContext);
 
-  // Redirect to login if not authenticated
   useEffect(() => {
     if (!token && currentPage !== 'login') {
       setCurrentPage('login');
     }
   }, [token, currentPage]);
 
-  const renderPage = () => {
-    switch (currentPage) {
-      case 'login':
-        return <Login />;
-      case 'cookbook':
-        return <div>My Cookbook Page</div>;
-      case 'create':
-        return <div>Create Recipe Page</div>;
-      default:
-        return <RecipeList />;
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -37,19 +25,14 @@ const App = () => {
       <main className="container mx-auto px-4 py-8">
         <Routes>
           <Route path="/login" element={!token ? <Login /> : <Navigate to="/" />} />
-          <Route path="/cookbook" element={token ? <div>My Cookbook Page</div> : <Navigate to="/login" />} />
-          <Route path="/create" element={token ? <div>Create Recipe Page</div> : <Navigate to="/login" />} />
+          <Route path="/cookbook" element={token ? <Cookbook/> : <Navigate to="/login" />} />
+          
           <Route path="/" element={token ? <RecipeList /> : <Navigate to="/login" />} />
         </Routes>
       </main>
     </div>
     
-    // <div className="min-h-screen bg-gray-100">
-    //   <Nav currentPage={currentPage} setCurrentPage={setCurrentPage} />
-    //   <main className="container mx-auto px-4 py-8">
-    //     {renderPage()}
-    //   </main>
-    // </div>
+
   );
 };
 

@@ -20,6 +20,7 @@ from helpers.recipe_helper import (
     delete_recipe,
 )
 
+from bson import ObjectId
 
 router = APIRouter(prefix="/recipe", tags=["recipe"])
 
@@ -59,14 +60,25 @@ async def get_recipes(
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@router.get("/{recipe_id}", response_model=Recipe)
+@router.get("/{recipe_id}", response_model=dict)
 async def get_recipe(recipe_id: str):
     if not ObjectId.is_valid(recipe_id):
         raise HTTPException(status_code=400, detail="Invalid recipe ID")
     recipe = await recipe_collection.find_one({"_id": ObjectId(recipe_id)})
     if recipe:
-        return Recipe(**recipe)
+        recipe["_id"] = str(recipe["_id"])
+        return recipe
     raise HTTPException(status_code=404, detail="Recipe not found")
+
+
+# @router.get("/{recipe_id}", response_model=Recipe)
+# async def get_recipe(recipe_id: str):
+#     if not ObjectId.is_valid(recipe_id):
+#         raise HTTPException(status_code=400, detail="Invalid recipe ID")
+#     recipe = await recipe_collection.find_one({"_id": ObjectId(recipe_id)})
+#     if recipe:
+#         return Recipe(**recipe)
+#     raise HTTPException(status_code=404, detail="Recipe not found")
 
 
 @router.delete("/{recipe_id}", response_model=Recipe)
@@ -97,6 +109,3 @@ async def update_recipe(
     if updated_recipe:
         return Recipe(**updated_recipe)
     raise HTTPException(status_code=404, detail="Recipe not found")
-
-
-# Additional endpoints can be added here, such as filtering by tags, cuisine, etc.

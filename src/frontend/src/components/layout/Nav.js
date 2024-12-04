@@ -77,6 +77,7 @@ export const Nav = () => {
                 color="inherit"
                 startIcon={<Home size={20} />}
                 sx={{
+                  color: 'white',
                   '&:hover': {
                     color: 'primary.light',
                   },
@@ -92,6 +93,7 @@ export const Nav = () => {
                     color="inherit"
                     startIcon={<Book size={20} />}
                     sx={{
+                      color: 'white',
                       '&:hover': {
                         color: 'primary.light',
                       },
@@ -123,6 +125,7 @@ export const Nav = () => {
                   color="inherit"
                   startIcon={<LogOut size={20} />}
                   sx={{
+                    color: 'white',
                     '&:hover': {
                       color: 'primary.light',
                     },
