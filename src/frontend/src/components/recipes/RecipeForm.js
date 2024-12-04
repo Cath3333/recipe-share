@@ -17,21 +17,11 @@ import {
 } from '@mui/material';
 import { Plus } from 'lucide-react';
 
-interface NewRecipe {
-  title: string;
-  description: string;
-  category: string;
-  ingredients: string[];
-  instructions: string[];
-  author_id: string;
-  average_rating: number;
-}
-
 export const RecipeForm = ({ onRecipeAdded }) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [recipe, setRecipe] = useState<NewRecipe>({
+  const [recipe, setRecipe] = useState({
     title: '',
     description: '',
     category: '',
@@ -246,5 +236,3 @@ export const RecipeForm = ({ onRecipeAdded }) => {
     </>
   );
 };
-
-// export default RecipeForm;

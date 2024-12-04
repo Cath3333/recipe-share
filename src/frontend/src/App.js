@@ -26,6 +26,7 @@ const App = () => {
       case 'create':
         return <div>Create Recipe Page</div>;
       default:
+        // return <div>hi</div>;
         return <RecipeList />;
     }
   };
