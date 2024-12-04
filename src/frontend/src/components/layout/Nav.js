@@ -57,6 +57,10 @@ const theme = createTheme({
 export const Nav = () => {
   const location = useLocation();
   const { token, logout } = React.useContext(AuthContext);
+  const handleLogout = () => {
+    logout();
+  };
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -120,10 +124,10 @@ export const Nav = () => {
             {/* Right side auth button */}
             <Box>
               {token ? (
-                <Link to="/logout" className={location.pathname === '/logout' ? 'active' : ''}>
                 <Button
                   color="inherit"
                   startIcon={<LogOut size={20} />}
+                  onClick={handleLogout}
                   sx={{
                     color: 'white',
                     '&:hover': {
@@ -133,7 +137,7 @@ export const Nav = () => {
                 >
                   Logout
                 </Button>
-                </Link>
+                
               ) : (
                 <Link to="/login" className={location.pathname === '/login' ? 'active' : ''}>
                 <Button
@@ -141,6 +145,7 @@ export const Nav = () => {
                   startIcon={<LogIn size={20} />}
                   // onClick={() => handleNavClick('login')}
                   sx={{
+                    color: 'white',
                     '&:hover': {
                       color: 'primary.light',
                     },
