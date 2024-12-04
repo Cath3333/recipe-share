@@ -156,13 +156,17 @@ async def save_recipe_to_user(id: str, recipe_id: str):
         raise HTTPException(status_code=400, detail="Invalid user ID format")
 
 
-@router.post("/{username}/unsave_recipe/{recipe_id}", response_model=User)
-async def unsave_recipe_from_user(username: str, recipe_id: str):
+@router.post("/{id}/unsave_recipe/{recipe_id}", response_model=User)
+async def unsave_recipe_from_user(id: str, recipe_id: str):
     # Validate recipe_id
     if not ObjectId.is_valid(recipe_id):
         raise HTTPException(status_code=400, detail="Invalid recipe ID")
 
-    user = await user_collection.find_one({"username": username})
+    # Validate user_id
+    if not ObjectId.is_valid(id):
+        raise HTTPException(status_code=400, detail="Invalid user ID")
+
+    user = await user_collection.find_one({"_id": ObjectId(id)})
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
@@ -170,8 +174,12 @@ async def unsave_recipe_from_user(username: str, recipe_id: str):
         raise HTTPException(status_code=400, detail="Recipe not saved")
 
     await user_collection.update_one(
-        {"username": username},
+        {"_id": ObjectId(id)},
         {"$pull": {"saved_recipes": ObjectId(recipe_id)}},
     )
-    updated_user = await user_collection.find_one({"username": username})
-    return User(**updated_user)
+    updated_user = await user_collection.find_one({"_id": ObjectId(id)})
+    updated_user["_id"] = str(updated_user["_id"])
+    for i, recipe_id in enumerate(updated_user.get("saved_recipes", [])):
+        updated_user["saved_recipes"][i] = str(recipe_id)
+    return updated_user
+

@@ -49,16 +49,19 @@ export const Cookbook = () => {
         }
     };
 
-  const handleUnsave = async (recipeId) => {
-    try {
-      await fetch(`http://localhost:8000/users/${user.name}/unsave_recipe/${recipeId}`, {
-        method: 'POST'
-      });
-      setSavedRecipes(recipes => recipes.filter(recipe => recipe._id !== recipeId));
-    } catch (error) {
-      console.error('Error unsaving recipe:', error);
-    }
+    const handleUnsave = async (recipeId) => {
+      try {
+          await fetch(`http://localhost:8000/users/${user._id}/unsave_recipe/${recipeId}`, {
+              method: 'POST'
+          });
+          setSavedRecipes(recipes => recipes.filter(recipe => recipe._id !== recipeId));
+          
+      } catch (error) {
+          console.error('Error unsaving recipe:', error);
+      }
   };
+  
+
 
   console.log(user);
   fetchSavedRecipes();
