@@ -440,31 +440,69 @@ export const RecipeList = () => {
   const [recipes, setRecipes] = useState([]);
   const [filter, setFilter] = useState({ category: 'all', minRating: 0 });
   const [loading, setLoading] = useState(true);
+  const [categories, setCategories] = useState([]);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     fetchRecipes();
   }, [filter]);
 
-  const fetchRecipes = async () => {
-    setLoading(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 500));
-      const data = MOCK_RECIPES.filter(recipe => {
-        const matchesCategory = filter.category === 'all' || 
-          recipe.category.toLowerCase() === filter.category.toLowerCase();
-        const matchesRating = recipe.average_rating >= filter.minRating;
-        return matchesCategory && matchesRating;
-      });
-      setRecipes(data);
-    } catch (error) {
-      console.error('Failed to fetch recipes:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-  
+//   const fetchRecipes = async () => {
+//     setLoading(true);
+//     try {
+//       await new Promise(resolve => setTimeout(resolve, 500));
+//       const data = MOCK_RECIPES.filter(recipe => {
+//         const matchesCategory = filter.category === 'all' || 
+//           recipe.category.toLowerCase() === filter.category.toLowerCase();
+//         const matchesRating = recipe.average_rating >= filter.minRating;
+//         return matchesCategory && matchesRating;
+//       });
+//       setRecipes(data);
+//       const uniqueCategories = [...new Set(data.map(recipe => recipe.category))];
+//       setCategories(uniqueCategories);
+
+//     } catch (error) {
+//       console.error('Failed to fetch recipes:', error);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+    const fetchRecipes = async () => {
+        setLoading(true);
+        setError('');
+        try {
+        let url = 'http://localhost:8000/recipe?';
+        
+        if (filter.category !== 'all') {
+            url += `category=${encodeURIComponent(filter.category)}&`;
+        }
+        
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error('Failed to fetch recipes');
+        }
+        
+        const data = await response.json();
+        const filteredData = data.filter(recipe => recipe.average_rating >= filter.minRating);
+        
+        setRecipes(filteredData);
+        
+        const uniqueCategories = [...new Set(data.map(recipe => recipe.category))];
+        setCategories(uniqueCategories);
+        } catch (error) {
+        console.error('Failed to fetch recipes:', error);
+        setError('Failed to load recipes. Please try again later.');
+        } finally {
+        setLoading(false);
+        }
+    };
+
   const handleRecipeAdded = (newRecipe) => {
     setRecipes([newRecipe, ...recipes]);
+    if (!categories.includes(newRecipe.category)) {
+        setCategories(prev => [...prev, newRecipe.category]);
+    }
   };
 
   const handleSave = async (recipeId) => {
@@ -475,7 +513,7 @@ export const RecipeList = () => {
     console.log('Rating recipe:', recipeId);
   };
 
-  const categories = [...new Set(MOCK_RECIPES.map(recipe => recipe.category))];
+//   const categories = [...new Set(MOCK_RECIPES.map(recipe => recipe.category))];
 
   return (
     <ThemeProvider theme={theme}>
@@ -537,7 +575,6 @@ export const RecipeList = () => {
           </Box>
         )}
 
-        {/* Empty State */}
         {!loading && recipes.length === 0 && (
           <Paper sx={{ textAlign: 'center', py: 8 }}>
             <Typography variant="h4" component="span" sx={{ mb: 2, display: 'block' }}>
@@ -552,7 +589,14 @@ export const RecipeList = () => {
           </Paper>
         )}
 
-        {/* Recipe Grid */}
+        {error && (
+            <Paper sx={{ textAlign: 'center', py: 8 }}>
+            <Typography variant="h4" component="span" sx={{ mb: 2, display: 'block' }}>
+              Error: {error}
+            </Typography>
+          </Paper>
+        )}
+
         {!loading && recipes.length > 0 && (
           <Grid container spacing={3}>
             {recipes.map((recipe) => (

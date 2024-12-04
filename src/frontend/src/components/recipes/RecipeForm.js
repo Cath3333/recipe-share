@@ -27,7 +27,7 @@ export const RecipeForm = ({ onRecipeAdded }) => {
     category: '',
     ingredients: [],
     instructions: [],
-    author_id: 'user1', // This would come from auth in a real app
+    author_id: 'user1', 
     average_rating: 0
   });
   const [newIngredient, setNewIngredient] = useState('');
