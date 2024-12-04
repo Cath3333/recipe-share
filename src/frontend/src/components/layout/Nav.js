@@ -1,3 +1,5 @@
+// src/components/layout/Nav.js
+
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu } from 'lucide-react';
@@ -11,6 +13,7 @@ import {
   Container,
   createTheme,
   ThemeProvider,
+  IconButton,
 } from '@mui/material';
 import { Home, Book, PenTool, LogIn, LogOut } from 'lucide-react';
 
@@ -22,7 +25,7 @@ const theme = createTheme({
       dark: '#D35400',
     },
     background: {
-      paper: '#2C1810', 
+      paper: '#2C1810', // Dark background for AppBar
     },
     text: {
       primary: '#FFFFFF',
@@ -52,84 +55,111 @@ const theme = createTheme({
   },
 });
 
-
-
 export const Nav = () => {
   const location = useLocation();
   const { token, logout } = React.useContext(AuthContext);
+  const navigate = useNavigate();
+
   const handleLogout = () => {
     logout();
+    navigate('/login'); // Redirect to login after logout
   };
-
 
   return (
     <ThemeProvider theme={theme}>
       <AppBar position="sticky" sx={{ bgcolor: 'background.paper' }}>
         <Container maxWidth="lg">
-          <Toolbar sx={{ 
-            padding: '0.5rem 0',
-            display: 'flex',
-            justifyContent: 'space-between',
-          }}>
-            <Box sx={{ 
-              display: 'flex', 
-              gap: 2,
-              alignItems: 'center'
-            }}>
-              <Link to="/" className={location.pathname === '/' ? 'active' : ''}>
-              <Button
-                color="inherit"
-                startIcon={<Home size={20} />}
-                sx={{
-                  color: 'white',
-                  '&:hover': {
-                    color: 'primary.light',
-                  },
-                }}
-              >
-                Home
-              </Button>
+          <Toolbar
+            sx={{
+              padding: '0.5rem 0',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            {/* Left side navigation buttons */}
+            <Box
+              sx={{
+                display: 'flex',
+                gap: 2,
+                alignItems: 'center',
+              }}
+            >
+              <Link to="/" style={{ textDecoration: 'none' }}>
+                <Button
+                  color="inherit"
+                  startIcon={<Home size={20} />}
+                  sx={{
+                    color: 'text.primary',
+                    '&:hover': {
+                      color: 'primary.light',
+                    },
+                    borderBottom:
+                      location.pathname === '/' ? '2px solid' : 'none',
+                    borderColor: 'primary.main',
+                  }}
+                >
+                  Home
+                </Button>
               </Link>
-              
+
               {token && (
-                <Link to="/cookbook" className={location.pathname === '/cookbook' ? 'active' : ''}>
-                  <Button
-                    color="inherit"
-                    startIcon={<Book size={20} />}
-                    sx={{
-                      color: 'white',
-                      '&:hover': {
-                        color: 'primary.light',
-                      },
-                    }}
-                  >
-                    My Cookbook
-                  </Button>
-                  {/* <Button
-                    color="inherit"
-                    startIcon={<PenTool size={20} />}
-                    onClick={() => handleNavClick('create')}
-                    sx={{
-                      '&:hover': {
-                        color: 'primary.light',
-                      },
-                    }}
-                  >
-                    Create Recipe
-                  </Button> */}
-                </Link>
+                <>
+                  <Link to="/cookbook" style={{ textDecoration: 'none' }}>
+                    <Button
+                      color="inherit"
+                      startIcon={<Book size={20} />}
+                      sx={{
+                        color: 'text.primary',
+                        '&:hover': {
+                          color: 'primary.light',
+                        },
+                        borderBottom:
+                          location.pathname === '/cookbook'
+                            ? '2px solid'
+                            : 'none',
+                        borderColor: 'primary.main',
+                      }}
+                    >
+                      My Cookbook
+                    </Button>
+                  </Link>
+
+                  {/* Uncomment if you implement Create Recipe feature */}
+                  {/* 
+                  <Link to="/create" style={{ textDecoration: 'none' }}>
+                    <Button
+                      color="inherit"
+                      startIcon={<PenTool size={20} />}
+                      sx={{
+                        color: 'text.primary',
+                        '&:hover': {
+                          color: 'primary.light',
+                        },
+                        borderBottom:
+                          location.pathname === '/create'
+                            ? '2px solid'
+                            : 'none',
+                        borderColor: 'primary.main',
+                      }}
+                    >
+                      Create Recipe
+                    </Button>
+                  </Link>
+                  */}
+                </>
               )}
             </Box>
 
-            {/* Right side auth button */}
-            <Box>
+            {/* Right side auth buttons */}
+            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
               {token ? (
                 <Button
                   color="inherit"
                   startIcon={<LogOut size={20} />}
                   onClick={handleLogout}
                   sx={{
-                    color: 'white',
+                    color: 'text.primary',
                     '&:hover': {
                       color: 'primary.light',
                     },
@@ -137,156 +167,55 @@ export const Nav = () => {
                 >
                   Logout
                 </Button>
-                
               ) : (
-                <Link to="/login" className={location.pathname === '/login' ? 'active' : ''}>
-                <Button
-                  color="inherit"
-                  startIcon={<LogIn size={20} />}
-                  // onClick={() => handleNavClick('login')}
-                  sx={{
-                    color: 'white',
-                    '&:hover': {
-                      color: 'primary.light',
-                    },
-                  }}
-                >
-                  Login
-                </Button>
-                </Link>
-              )}
+                <>
+                  <Link to="/login" style={{ textDecoration: 'none' }}>
+                    <Button
+                      color="inherit"
+                      startIcon={<LogIn size={20} />}
+                      sx={{
+                        color: 'text.primary',
+                        '&:hover': {
+                          color: 'primary.light',
+                        },
+                        borderBottom:
+                          location.pathname === '/login'
+                            ? '2px solid'
+                            : 'none',
+                        borderColor: 'primary.main',
+                      }}
+                    >
+                      Login
+                    </Button>
+                  </Link>
 
+                  <Link to="/register" style={{ textDecoration: 'none' }}>
+                    <Button
+                      color="inherit"
+                      startIcon={<PenTool size={20} />}
+                      sx={{
+                        color: 'text.primary',
+                        '&:hover': {
+                          color: 'primary.light',
+                        },
+                        borderBottom:
+                          location.pathname === '/register'
+                            ? '2px solid'
+                            : 'none',
+                        borderColor: 'primary.main',
+                      }}
+                    >
+                      Register
+                    </Button>
+                  </Link>
+                </>
+              )}
             </Box>
           </Toolbar>
         </Container>
       </AppBar>
     </ThemeProvider>
   );
-  
-  return (
-    <nav>
-      <Link to="/" className={location.pathname === '/' ? 'active' : ''}>
-        Home
-      </Link>
-      <Link to="/cookbook" className={location.pathname === '/cookbook' ? 'active' : ''}>
-        My Cookbook
-      </Link>
-      <Link to="/create" className={location.pathname === '/create' ? 'active' : ''}>
-        Create Recipe
-      </Link>
-    </nav>
-  );
 };
-
-
-// export const Nav = ({ currentPage, setCurrentPage }) => {
-//   const { token, logout } = React.useContext(AuthContext);
-
-//   const handleNavClick = (page) => {
-//     setCurrentPage(page);
-//   };
-
-//   const handleLogout = () => {
-//     logout();
-//     setCurrentPage('login');
-//   };
-
-//   return (
-//     <ThemeProvider theme={theme}>
-//       <AppBar position="sticky" sx={{ bgcolor: 'background.paper' }}>
-//         <Container maxWidth="lg">
-//           <Toolbar sx={{ 
-//             padding: '0.5rem 0',
-//             display: 'flex',
-//             justifyContent: 'space-between',
-//           }}>
-//             {/* Left side navigation buttons */}
-//             <Box sx={{ 
-//               display: 'flex', 
-//               gap: 2,
-//               alignItems: 'center'
-//             }}>
-//               <Button
-//                 color="inherit"
-//                 startIcon={<Home size={20} />}
-//                 onClick={() => handleNavClick('home')}
-//                 sx={{
-//                   '&:hover': {
-//                     color: 'primary.light',
-//                   },
-//                 }}
-//               >
-//                 Home
-//               </Button>
-
-//               {token && (
-//                 <>
-//                   <Button
-//                     color="inherit"
-//                     startIcon={<Book size={20} />}
-//                     onClick={() => handleNavClick('cookbook')}
-//                     sx={{
-//                       '&:hover': {
-//                         color: 'primary.light',
-//                       },
-//                     }}
-//                   >
-//                     My Cookbook
-//                   </Button>
-//                   {/* <Button
-//                     color="inherit"
-//                     startIcon={<PenTool size={20} />}
-//                     onClick={() => handleNavClick('create')}
-//                     sx={{
-//                       '&:hover': {
-//                         color: 'primary.light',
-//                       },
-//                     }}
-//                   >
-//                     Create Recipe
-//                   </Button> */}
-//                 </>
-//               )}
-//             </Box>
-
-//             <Box>
-//               {token ? (
-//                 <Link to="/logout" className={location.pathname === '/logout' ? 'active' : ''}>
-//                 <Button
-//                   color="inherit"
-//                   startIcon={<LogOut size={20} />}
-//                   onClick={handleLogout}
-//                   sx={{
-//                     '&:hover': {
-//                       color: 'primary.light',
-//                     },
-//                   }}
-//                 >
-//                   Logout
-//                 </Button>
-//                 </Link>
-//               ) : (
-//                 <Link to="/login" className={location.pathname === '/login' ? 'active' : ''}>
-//                 <Button
-//                   color="inherit"
-//                   startIcon={<LogIn size={20} />}
-//                   onClick={() => handleNavClick('login')}
-//                   sx={{
-//                     '&:hover': {
-//                       color: 'primary.light',
-//                     },
-//                   }}
-//                 >
-//                   Login
-//                 </Button>
-//                 </Link>
-//               )}
-//             </Box>
-//           </Toolbar>
-//         </Container>
-//       </AppBar>
-//     </ThemeProvider>
-//   );
-// };
 
 export default Nav;
