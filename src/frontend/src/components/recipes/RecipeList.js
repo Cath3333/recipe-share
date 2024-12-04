@@ -20,35 +20,36 @@ import {
 } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 import { Search, Star } from 'lucide-react';
+import {RecipeForm, NewRecipe} from './RecipeForm.js';
 
 const theme = createTheme({
     palette: {
       primary: {
-        main: '#E86A33', // Warm orange
+        main: '#E86A33', 
         light: '#FF8F5C',
         dark: '#D35400',
       },
       secondary: {
-        main: '#F2BE22', // Warm yellow
+        main: '#F2BE22', 
         light: '#FFD54F',
         dark: '#C49000',
       },
       background: {
-        default: '#FFF9F2', // Warm off-white
+        default: '#FFF9F2', 
         paper: '#FFFFFF',
       },
       text: {
-        primary: '#2C1810', // Warm dark brown
-        secondary: '#8B4513', // Saddle brown
+        primary: '#2C1810', 
+        secondary: '#8B4513',
       },
       error: {
-        main: '#D84315', // Warm red
+        main: '#D84315',
       },
       warning: {
-        main: '#FF9800', // Orange
+        main: '#FF9800', 
       },
       success: {
-        main: '#869D7A', // Muted green
+        main: '#869D7A', 
       },
     },
     components: {
@@ -157,6 +158,10 @@ export const RecipeList = () => {
     }
   };
 
+  const handleRecipeAdded = (newRecipe) => {
+    setRecipes(prevRecipes => [newRecipe, ...prevRecipes]);
+  };
+
   const handleSave = async (recipeId) => {
     console.log('Saved recipe:', recipeId);
   };
@@ -171,7 +176,6 @@ export const RecipeList = () => {
     <ThemeProvider theme={theme}>
     <Box sx={{ bgcolor: 'grey.50', minHeight: '100vh', py: 4 }}>
       <Container maxWidth="lg">
-        {/* Header */}
         <Box sx={{ textAlign: 'center', mb: 6 }}>
           <Typography variant="h2" component="h1" gutterBottom>
              Recipe Share
@@ -181,7 +185,6 @@ export const RecipeList = () => {
           </Typography>
         </Box>
 
-        {/* Filters */}
         <Paper elevation={1} sx={{ p: 3, mb: 4 }}>
           <Typography variant="h6" gutterBottom>
             Filter Recipes
@@ -219,7 +222,6 @@ export const RecipeList = () => {
           </Grid>
         </Paper>
 
-        {/* Loading State */}
         {loading && (
           <Box sx={{ textAlign: 'center', py: 8 }}>
             <CircularProgress />
@@ -227,7 +229,6 @@ export const RecipeList = () => {
           </Box>
         )}
 
-        {/* Empty State */}
         {!loading && recipes.length === 0 && (
           <Paper sx={{ textAlign: 'center', py: 8 }}>
             <Typography variant="h4" component="span" sx={{ mb: 2, display: 'block' }}>
@@ -242,7 +243,6 @@ export const RecipeList = () => {
           </Paper>
         )}
 
-        {/* Recipe Grid */}
         {!loading && recipes.length > 0 && (
           <Grid container spacing={3}>
             {recipes.map((recipe) => (
@@ -277,7 +277,6 @@ export const RecipeList = () => {
                   <CardActions sx={{ p: 2, pt: 0 }}>
                     <Button 
                       variant="outlined" 
-                    //   startIcon={<SaveAlt />}
                       onClick={() => handleSave(recipe.id)}
                       fullWidth
                     >
@@ -285,7 +284,6 @@ export const RecipeList = () => {
                     </Button>
                     <Button 
                       variant="contained" 
-                    //   startIcon={<Grade />}
                       onClick={() => handleRate(recipe.id)}
                       fullWidth
                     >
@@ -297,6 +295,7 @@ export const RecipeList = () => {
             ))}
           </Grid>
         )}
+        <RecipeForm onRecipeAdded={handleRecipeAdded} />
       </Container>
     </Box>
     </ThemeProvider>
